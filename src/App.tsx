@@ -1,14 +1,9 @@
 import React from 'react';
+import Coupon from './Coupon'
 import './App.css';
 
-// Define the structure of a coupon item
-interface Coupon {
-  name: string;
-  value: string;
-}
-
 // random coupons for visuals 
-const coupons: Coupon[] = [
+const coupons = [
   { name: '10% Off', value: '$10' },
   { name: 'Free Shipping', value: '$5' },
   { name: 'Buy One Get One Free', value: 'Varies' },
@@ -16,12 +11,12 @@ const coupons: Coupon[] = [
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className="app">
+      <header className="app-header">
         <h1>Coupon Quest</h1>
       </header>
       <main>
-        <table className="Coupon-table">
+        <table className="coupon-table">
           <thead>
             <tr>
               <th>Coupon Name</th>
@@ -29,11 +24,11 @@ const App: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {coupons.map((coupon, index) => (
-              <tr key={index}>
-                <td>{coupon.name}</td>
-                <td>{coupon.value}</td>
-              </tr>
+          {coupons.map((coupon) => (
+              <Coupon 
+                name={coupon.name} 
+                value={coupon.value} 
+              />
             ))}
           </tbody>
         </table>

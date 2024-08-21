@@ -40,3 +40,38 @@
 .read-the-docs {
   color: #888;
 }
+
+.app {
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.app-header {
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+}
+
+.app-logo {
+  height: 80px;
+}
+
+.coupon-table {
+  margin: 20px auto;
+  border-collapse: collapse;
+  width: 80%;
+}
+
+.coupon-table th, .coupon-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.coupon-table th {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.coupon-table tr:hover {
+  background-color: #ddd;
+}
