@@ -1,22 +1,16 @@
 import { google } from 'googleapis';
-import { OAuth2Client } from 'google-auth-library';
+import secrets from './secrets';
 
-// Your OAuth 2.0 credentials
-const CLIENT_ID = 'YOUR_CLIENT_ID';
-const CLIENT_SECRET = 'YOUR_CLIENT_SECRET';
-const REDIRECT_URI = 'YOUR_REDIRECT_URI';
+// import { OAuth2Client } from 'google-auth-library';
 
-// Initialize OAuth2 client
 const oauth2Client = new google.auth.OAuth2(
-  CLIENT_ID,
-  CLIENT_SECRET,
-  REDIRECT_URI
+  secrets.CLIENT_ID,
+  secrets.CLIENT_SECRET,
+  secrets.REDIRECT_URI
 );
 
-// Scopes for accessing Gmail
 const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
 
-// Function to get authorization URL
 export function getAuthUrl(): string {
   const url = oauth2Client.generateAuthUrl({
     access_type: 'offline',
