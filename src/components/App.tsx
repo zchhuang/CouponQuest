@@ -4,15 +4,15 @@ import './App.css';
 import { GoogleLogin } from '@react-oauth/google';
 import { getCoupons } from '../helpers/db'
 import { fetchEmails } from '../helpers/gmail_helpers'
-import { isEmptyDict } from '../helpers/utils' 
+import { CredentialResponse } from '@react-oauth/google';
 
 const App: React.FC = () => {
-  const [ user, setUser ] = useState({});
+  const [ user, setUser ] = useState<CredentialResponse | null>(null);
   const [coupons, setCoupons] = useState<CouponItem[]>([]);
 
   const handleFetchAndStoreEmails = async () => {
-    if (!isEmptyDict(user)) {
-      fetchEmails(user);
+    if (user) {
+      await fetchEmails(user.credential ?? "");
     } else {
       alert("You must authenticate first!");
     }

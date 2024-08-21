@@ -14,7 +14,7 @@ const Coupon: React.FC<CouponItem> = (coupon: CouponItem) => {
     <tr onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
       <td>{name}</td>
       <td>{dealValue}</td>
-      <td>{expirationDate?.toString() || 'N/A'}</td>
+      <td>{expirationDate?.toString() ?? 'N/A'}</td>
     </tr>
   );
 };
