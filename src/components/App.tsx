@@ -1,19 +1,20 @@
 import React, {useState, useEffect} from 'react';
-import Coupon from './Coupon'
+import Coupon, {CouponItem} from './Coupon'
 import './App.css';
 import { GoogleLogin } from '@react-oauth/google';
-import { getCoupons, coup } from '../helpers/db'
+import { getCoupons } from '../helpers/db'
 import { fetchEmails } from '../helpers/gmail_helpers'
+import { isEmptyDict } from '../helpers/utils' 
 
 const App: React.FC = () => {
   const [ user, setUser ] = useState({});
-  const [coupons, setCoupons] = useState<coup[]>([]);
+  const [coupons, setCoupons] = useState<CouponItem[]>([]);
 
   const handleFetchAndStoreEmails = async () => {
-    if (user) {
+    if (!isEmptyDict(user)) {
       fetchEmails(user);
     } else {
-      alert("You must authenticate first!")
+      alert("You must authenticate first!");
     }
   }
 
@@ -56,8 +57,7 @@ const App: React.FC = () => {
           <tbody>
           {coupons.map((coupon) => (
               <Coupon 
-                name={coupon.name} 
-                value={coupon.dealValue} 
+                {...coupon}
               />
             ))}
           </tbody>
