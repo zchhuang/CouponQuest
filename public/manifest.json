@@ -6,10 +6,18 @@
         "default_popup": "index.html"
     },
     "permissions": [
-        "scripting"
+        "scripting",
+        "storage",
+        "identity"
     ],
     "host_permissions": [
         "http://*/*",
         "https://*/*"
-    ]
+    ],
+    "oauth2": {
+        "client_id": "266452307636-j5bbovc9nnff55ilkpd6heu2b9ogtra8.apps.googleusercontent.com",
+        "scopes": [
+        "https://www.googleapis.com/auth/gmail.readonly"
+        ]
+    }
 }
