@@ -1,6 +1,7 @@
 import React from 'react';
 import Coupon from './Coupon'
 import './App.css';
+import {getAuthUrl} from "./gmail_helpers"
 
 // random coupons for visuals 
 const coupons = [
@@ -8,6 +9,9 @@ const coupons = [
   { name: 'Free Shipping', value: '$5' },
   { name: 'Buy One Get One Free', value: 'Varies' },
 ];
+
+const authUrl = getAuthUrl();
+console.log(authUrl);
 
 const App: React.FC = () => {
   return (
