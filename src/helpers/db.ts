@@ -7,13 +7,13 @@ return new Promise((resolve, reject) => {
     const request = indexedDB.open('couponDB', 1);
 
     request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
-    const db = (event.target as IDBOpenDBRequest).result as IDBDatabase;
+    const db = (event.target as IDBOpenDBRequest).result;
     if (!db.objectStoreNames.contains('coupons')) {
         db.createObjectStore('coupons', { keyPath: 'id', autoIncrement: true });
     }
     };
 
-    request.onsuccess = () => resolve(request.result as IDBDatabase);
+    request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
 });
 }

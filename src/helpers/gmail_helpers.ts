@@ -45,7 +45,7 @@ export async function verifyToken(clientId: string, jwtToken: string) {
 // }
 
 export async function fetchEmails(jwtToken: string, startDate: Date | null = null) {
-    verifyToken(secrets.clientId, jwtToken);
-    console.log(startDate, jwtToken);
+    const payload = await verifyToken(secrets.clientId, jwtToken);
+    console.log(startDate, payload);
     // console.log(listEmails(jwtToken));
 }
