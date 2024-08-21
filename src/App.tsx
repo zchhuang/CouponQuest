@@ -1,35 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+// Define the structure of a coupon item
+interface Coupon {
+  name: string;
+  value: string;
 }
 
-export default App
+// random coupons for visuals 
+const coupons: Coupon[] = [
+  { name: '10% Off', value: '$10' },
+  { name: 'Free Shipping', value: '$5' },
+  { name: 'Buy One Get One Free', value: 'Varies' },
+];
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <h1>Coupon Quest</h1>
+      </header>
+      <main>
+        <table className="Coupon-table">
+          <thead>
+            <tr>
+              <th>Coupon Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {coupons.map((coupon, index) => (
+              <tr key={index}>
+                <td>{coupon.name}</td>
+                <td>{coupon.value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </main>
+    </div>
+  );
+}
+
+export default App;
