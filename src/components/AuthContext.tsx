@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from 'axios';
 import secrets from '../helpers/secrets'
+import {isChromeExtension} from '../helpers/utils'
 
 interface AuthContextProps {
   accessToken: string | null;
@@ -30,10 +31,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const redirectUri = secrets.redirectUri;
     const scope = 'https://www.googleapis.com/auth/gmail.readonly';
     const responseType = 'code';
-    const accessType = 'offline'; 
-
-    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?response_type=${responseType}&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&access_type=${accessType}`;
-    };
+    const accessType = 'offline';
+  
+    // Construct the authorization URL
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=${responseType}&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&access_type=${accessType}`;
+  
+    if (isChromeExtension()) {
+        chrome.tabs.create({ url: authUrl });
+    } else {
+        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?response_type=${responseType}&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&access_type=${accessType}`;
+    }
+  };
 
     const handleCallback = async () => {
         const query = new URLSearchParams(window.location.search);

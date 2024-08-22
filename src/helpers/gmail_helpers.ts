@@ -3,6 +3,7 @@
 
 import axios from 'axios';
 
+import {formatDate} from './utils';
 // const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
 
@@ -66,23 +67,29 @@ export async function listEmails(access_token: string, startDate: Date | null = 
     console.log(startDate);
     try {
         let nextPageToken = null;
-        const messages = [];
+        const messageIds = [];
+
+        const dateFilter = startDate ? `before:${formatDate(startDate)}` : '';
     
         // Fetch message IDs
         do {
-          const response: any = await axios.get(`https://www.googleapis.com/gmail/v1/users/zhuang9040@gmail.com/messages`, {
+          const response: any = await axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages`, {
             headers: {
                 'Authorization': `Bearer ${access_token}`,
+            },
+            params: {
+                pageToken: nextPageToken,
+                q: dateFilter,
             }
           })
     
-        //   nextPageToken = response.data.nextPageToken;
-          nextPageToken = null;
-          messages.push(...response.data.messages);
+          console.log(response.data.nextPageToken);
+          nextPageToken = response.data.nextPageToken;
+          messageIds.push(...response.data.messages);
     
         } while (nextPageToken);
-        console.log(messages);
-        return messages;
+        console.log(messageIds);
+        return messageIds;
     
       } catch (error) {
         console.error('Error fetching Gmail messages:', error);
