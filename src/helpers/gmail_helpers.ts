@@ -15,7 +15,8 @@ export async function listEmailIds(access_token: string, startDate: Date | null 
         const dateFilter = startDate ? `before:${formatDate(startDate)}` : '';
         let i = 0;
         do {
-          const response: any = await axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages`, {
+           // eslint-disable-next-line
+          const response: Record<string, any> = await axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages`, {
             headers: {
                 'Authorization': `Bearer ${access_token}`,
             },
@@ -40,7 +41,8 @@ export async function listEmailIds(access_token: string, startDate: Date | null 
 
 export async function getEmailContent(access_token: string, message_id: string) {
     try {
-        const response: any = await axios.get(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${message_id}`, {
+        // eslint-disable-next-line     
+        const response: Record<string, any> = await axios.get(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${message_id}`, {
             headers: {
                 'Authorization': `Bearer ${access_token}`,            
             },

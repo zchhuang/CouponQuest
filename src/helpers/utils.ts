@@ -3,7 +3,7 @@ export function isEmptyDict(dictionary: Record<string, string>): boolean {
 }
 
 export function isChromeExtension() {
-    // eslint-disable-next-line
+     
     return window.chrome && chrome.runtime && chrome.runtime.id;
 };
 

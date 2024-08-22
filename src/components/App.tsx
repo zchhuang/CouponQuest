@@ -51,6 +51,7 @@ const App: React.FC = () => {
           <tbody>
           {coupons.map((coupon) => (
               <Coupon 
+                key={coupon.id} // Replace `coupon.id` with a unique identifier from your coupon data
                 {...coupon}
               />
             ))}
