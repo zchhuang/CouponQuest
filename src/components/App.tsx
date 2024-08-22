@@ -1,18 +1,18 @@
 import React, {useState, useEffect} from 'react';
 import Coupon, {CouponItem} from './Coupon'
 import './App.css';
-import { GoogleLogin } from '@react-oauth/google';
+import { useAuth } from './AuthContext';
 import { getCoupons } from '../helpers/db'
 import { fetchEmails } from '../helpers/gmail_helpers'
-import { CredentialResponse } from '@react-oauth/google';
 
 const App: React.FC = () => {
-  const [ user, setUser ] = useState<CredentialResponse | null>(null);
   const [coupons, setCoupons] = useState<CouponItem[]>([]);
+  const { accessToken, login, handleCallback} = useAuth();
 
   const handleFetchAndStoreEmails = async () => {
-    if (user) {
-      await fetchEmails(user.credential || "");
+    if (accessToken) {
+      console.log(accessToken);
+      await fetchEmails(accessToken || "");
     } else {
       alert("You must authenticate first!");
     }
@@ -28,6 +28,7 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
+    handleCallback();
     fetchCoupons();
   }, []);
 
@@ -35,17 +36,10 @@ const App: React.FC = () => {
     <div className="app">
       <header className="app-header">
         <h1>Coupon Quest</h1>
-        <GoogleLogin
-          shape="pill"
-          onSuccess={credentialResponse => {
-            setUser(credentialResponse);
-          }}
-          onError={() => {
-            console.log('Login Failed');
-          }}
-        />
+        <button onClick={login}>Sign in with Google 🚀 </button>
       </header>
       <main>
+        <br></br>
         <button onClick={handleFetchAndStoreEmails}> Fetch Coupons </button>
         <table className="coupon-table">
           <thead>

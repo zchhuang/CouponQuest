@@ -1,10 +1,14 @@
 // import secrets from './secrets';
-import { jwtDecode } from "jwt-decode";
+// import { jwtDecode } from "jwt-decode";
 
 import axios from 'axios';
 
 // const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
+
+/**
+ * This code was used for working with Google ID Tokens, which come as JWT and must be
+ * decoded.  However, ID Tokens cannot be used for API calls, so I shifted away from that. 
 interface DecodedGooglePayload {
     iss: string;           // Issuer of the token
     nbf: number;           // Not Before - Timestamp when the token becomes valid
@@ -56,25 +60,24 @@ function getGoogleRequestHeader(payload: DecodedGooglePayload): GoogleRequestHea
     return header;
   }
 
-export async function listEmails(g: GoogleRequestHeader, jwtToken: string, startDate: Date | null = null) {
+*/
+
+export async function listEmails(access_token: string, startDate: Date | null = null) {
+    console.log(startDate);
     try {
         let nextPageToken = null;
         const messages = [];
     
         // Fetch message IDs
         do {
-          const response: any = await axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages`, {
+          const response: any = await axios.get(`https://www.googleapis.com/gmail/v1/users/zhuang9040@gmail.com/messages`, {
             headers: {
-                'Authorization': `Bearer ${jwtToken}`,
-                iss: g.iss,
-                sub: g.sub,
-                aud: g.aud,
-                iat: g.iat,
-                exp: g.exp
+                'Authorization': `Bearer ${access_token}`,
             }
           })
     
-          nextPageToken = response.data.nextPageToken;
+        //   nextPageToken = response.data.nextPageToken;
+          nextPageToken = null;
           messages.push(...response.data.messages);
     
         } while (nextPageToken);
@@ -86,8 +89,6 @@ export async function listEmails(g: GoogleRequestHeader, jwtToken: string, start
       }
 }
 
-export async function fetchEmails(jwtToken: string, startDate: Date | null = null) {
-    const payload = await decodeJwtToken(jwtToken);
-    const googleRequestHeader = getGoogleRequestHeader(payload);
-    console.log(listEmails(googleRequestHeader, jwtToken));
+export async function fetchEmails(access_token: string, startDate: Date | null = null) {
+    console.log(await listEmails(access_token, startDate));
 }
