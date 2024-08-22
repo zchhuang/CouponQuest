@@ -2,14 +2,82 @@
 // import { jwtDecode } from "jwt-decode";
 
 import axios from 'axios';
+import {formatDate, decodeBase64Url, extractTextFromHtml } from './utils';
 
-import {formatDate} from './utils';
 // const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+const MAX_PAGES = 3;
+
+export async function listEmailIds(access_token: string, startDate: Date | null = null): Promise<string[]> {
+    try {
+        let nextPageToken = null;
+        const messageIds = [];
+
+        const dateFilter = startDate ? `before:${formatDate(startDate)}` : '';
+        let i = 0;
+        do {
+          const response: any = await axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages`, {
+            headers: {
+                'Authorization': `Bearer ${access_token}`,
+            },
+            params: {
+                pageToken: nextPageToken,
+                q: dateFilter,
+            }
+          })
+    
+          nextPageToken = response.data.nextPageToken;
+          const ids = response.data.messages.map((message: { id: string }) => message.id);
+          messageIds.push(...ids);
+          i++;
+        } while (nextPageToken && i < MAX_PAGES);
+        return messageIds;
+    
+      } catch (error) {
+        console.error('Error fetching Gmail messages:', error);
+        return [];
+      }
+}
+
+export async function getEmailContent(access_token: string, message_id: string) {
+    try {
+        const response: any = await axios.get(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${message_id}`, {
+            headers: {
+                'Authorization': `Bearer ${access_token}`,            
+            },
+            params: {
+                format: 'full'
+            }
+        });
+        const plainTextPart = response.data.payload;
+        if (plainTextPart) {
+            return extractTextFromHtml(decodeBase64Url(plainTextPart.body.data));
+        } else {
+            console.log("Issues finding and decoding message: ", message_id);
+        }
+
+    } catch (error) {
+        console.log('Error fetching Gmail message: ', error);
+        return null;
+    }
+}
+
+export async function fetchEmails(access_token: string, startDate: Date | null = null) {
+    const messageIds = await listEmailIds(access_token, startDate);
+    for (const id of messageIds) {
+        const emailContent = await getEmailContent(access_token, id);
+        if (emailContent) {
+            console.log(emailContent);
+            console.log(emailContent.length);
+        }
+        break;
+    }
+}
 
 
 /**
  * This code was used for working with Google ID Tokens, which come as JWT and must be
  * decoded.  However, ID Tokens cannot be used for API calls, so I shifted away from that. 
+ * I archived this code mainly in case I do deal with Google Identity in the future. 
 interface DecodedGooglePayload {
     iss: string;           // Issuer of the token
     nbf: number;           // Not Before - Timestamp when the token becomes valid
@@ -62,40 +130,3 @@ function getGoogleRequestHeader(payload: DecodedGooglePayload): GoogleRequestHea
   }
 
 */
-
-export async function listEmails(access_token: string, startDate: Date | null = null) {
-    console.log(startDate);
-    try {
-        let nextPageToken = null;
-        const messageIds = [];
-
-        const dateFilter = startDate ? `before:${formatDate(startDate)}` : '';
-    
-        // Fetch message IDs
-        do {
-          const response: any = await axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages`, {
-            headers: {
-                'Authorization': `Bearer ${access_token}`,
-            },
-            params: {
-                pageToken: nextPageToken,
-                q: dateFilter,
-            }
-          })
-    
-          console.log(response.data.nextPageToken);
-          nextPageToken = response.data.nextPageToken;
-          messageIds.push(...response.data.messages);
-    
-        } while (nextPageToken);
-        console.log(messageIds);
-        return messageIds;
-    
-      } catch (error) {
-        console.error('Error fetching Gmail messages:', error);
-      }
-}
-
-export async function fetchEmails(access_token: string, startDate: Date | null = null) {
-    console.log(await listEmails(access_token, startDate));
-}

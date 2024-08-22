@@ -1,11 +1,10 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import tseslint from 'typescript-eslint'
-// eslint.config.js
-import react from 'eslint-plugin-react'
+// eslint.config.js or .eslintrc.js
+const js = require('@eslint/js');
+const globals = require('globals');
+const tseslint = require('@typescript-eslint/eslint-plugin');
+const react = require('eslint-plugin-react')
 
-export default tseslint.config(
-
+module.exports = tseslint.config(
   { ignores: ['dist'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommendedTypeChecked, ...tseslint.configs.stylisticTypeChecked],
@@ -15,7 +14,7 @@ export default tseslint.config(
       globals: globals.browser,
       parserOptions: {
         project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
+        tsconfigRootDir: __dirname, // Use __dirname for the root directory
       },
     },
     plugins: {
@@ -25,5 +24,5 @@ export default tseslint.config(
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
     },
-  },
-)
+  }
+);
