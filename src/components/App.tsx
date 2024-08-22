@@ -12,7 +12,7 @@ const App: React.FC = () => {
 
   const handleFetchAndStoreEmails = async () => {
     if (user) {
-      await fetchEmails(user.credential ?? "");
+      await fetchEmails(user.credential || "");
     } else {
       alert("You must authenticate first!");
     }
@@ -36,9 +36,9 @@ const App: React.FC = () => {
       <header className="app-header">
         <h1>Coupon Quest</h1>
         <GoogleLogin
+          shape="pill"
           onSuccess={credentialResponse => {
             setUser(credentialResponse);
-            console.log(credentialResponse);
           }}
           onError={() => {
             console.log('Login Failed');
