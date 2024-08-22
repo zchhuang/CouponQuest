@@ -2,16 +2,12 @@
 
 get email coupons and track them so we don't miss out on good deals
 
-Dependencies:
-`npm install`
+`npm install` : Dependencies
 
-Dev Server on Browser:
-`npm run dev`
+`npm run dev` : Dev Server on Browser
 
-Build:
-`npm run build`
+`npm run build` : Build
 
-Lint:
-`npm run lint`
+`npm run lint` : Linters
 `npm run lint-fix`
 
